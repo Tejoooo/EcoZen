@@ -22,14 +22,14 @@ class _ZenCoinsState extends State<ZenCoins> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Zen Coins",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.green[600],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  // Text(
+                  //   "Zen Coins",
+                  //   style: TextStyle(
+                  //     fontSize: 20,
+                  //     color: Colors.green[600],
+                  //     fontWeight: FontWeight.w500,
+                  //   ),
+                  // ),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -107,7 +107,7 @@ class CouponCard extends StatelessWidget {
                   Text(
                     "APPLY",
                     style: TextStyle(
-                        fontWeight: FontWeight.w600, color: Colors.amber),
+                        fontWeight: FontWeight.w600, color: Colors.indigo[300]),
                   ),
                 ],
               ),
@@ -131,7 +131,7 @@ class CouponCard extends StatelessWidget {
             Container(
               height: 50,
               decoration: BoxDecoration(
-                  color: Colors.deepPurple[400],
+                  color: Colors.green[300],
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(15),
                       bottomRight: Radius.circular(15))),
