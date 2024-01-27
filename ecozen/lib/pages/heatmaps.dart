@@ -23,18 +23,27 @@ class _HeatMapsState extends State<HeatMaps> {
   late GoogleMapController mapController;
 
   LatLng _center = LatLng(-23.5557714, -46.6395571);
+  double zoom = 11.0;
+  bool _isLoading = false;
 
   Set<Marker> markers = Set();
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _isLoading = true;
+    });
+    FetchAllProblems();
     getCurrentLocation().then((value) {
       setState(() {
+        _isLoading = false;
+      });
+      setState(() {
+        zoom = 15.0;
         _center = LatLng(value.latitude, value.longitude);
       });
       mapController.animateCamera(CameraUpdate.newLatLng(_center));
     });
-    FetchAllProblems();
   }
 
   void FetchAllProblems() async {
@@ -102,22 +111,36 @@ class _HeatMapsState extends State<HeatMaps> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _center == null
-          ? Center(child: CircularProgressIndicator())
-          : GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: _center,
-                zoom: 11.0,
-              ),
-              markers: Set.from(markers),
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _center,
+              zoom: zoom,
             ),
+            markers: Set.from(markers),
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+          ),
+          _isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Container(),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          setState(() {
+            _isLoading = true;
+          });
           getCurrentLocation().then((value) {
             setState(() {
+              _isLoading = false;
+            });
+            setState(() {
+              zoom = 15.0;
               _center = LatLng(value.latitude, value.longitude);
             });
             mapController.animateCamera(CameraUpdate.newLatLng(_center));
