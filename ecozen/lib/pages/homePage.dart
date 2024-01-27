@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> {
                 ..strokeWidth = 1.0
                 ..color = Colors.black,
               ),
+              textAlign: TextAlign.left,
             ),
           ),
           CarouselSlider(
