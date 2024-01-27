@@ -58,7 +58,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       Map<String, dynamic> jsonResponse = json.decode(responseBody);
       if (response.statusCode == 200) {
         final responseData = await response.stream.bytesToString();
-        print('API Response: $responseData');
+        SuccessSnackBar(context, 'Image Stored Succesfully');
+        setState(() {
+          _pickedImage = null;
+        });
       } else {
         ErrorSnackBar(context,
             'Failed to upload image, Error: ${jsonResponse['message']}');
