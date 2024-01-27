@@ -1,3 +1,6 @@
+import 'package:ecozen/pages/loginPage.dart';
+import 'package:ecozen/pages/services/pagesService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -10,6 +13,15 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return PagesService();
+        } else {
+          return LoginPage();
+        }
+      },
+    );
   }
 }
