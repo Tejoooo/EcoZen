@@ -51,4 +51,14 @@ class Admin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    
+class Admin(models.Model):
+    user = models.TextField(primary_key=True, unique=True)
+    phone_number = models.CharField(max_length=15,blank=False,null=False)
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=255)
+    address = models.TextField()
+    city = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=255, blank=True, null=True)
+    pincode = models.CharField(max_length=10, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
