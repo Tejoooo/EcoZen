@@ -9,4 +9,4 @@ class UserModelSerializer(serializers.ModelSerializer):
 class UserProblemSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProblem
-        fields = ['user','description']
+        fields = ['user','description','latitude','longitude','image']

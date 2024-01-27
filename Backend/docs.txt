@@ -1,5 +1,6 @@
 empty for now
 
+<<<<<<< HEAD
 http://127.0.0.1:8000/api/user/ ---> api for creating of user 
 name,user_id,address,phone_number,email---> mandotory fields
 city,state,pincode--> not mandatory
@@ -9,3 +10,23 @@ http://127.0.0.1:8000/api/upload/ -----> api for image upload
 form-data
 Image-->file type,user--->text,descrition--->text ,title-->not mandatory text
 
+=======
+http://127.0.0.1:8000/api/user/---> for creating the users
+{
+  "user_id": "555555555",
+  "phone_number": "555-555-5555",
+  "email": "user@example.com",
+  "name": "Jane Doe",
+  "address": "789 Pine St",
+  "city": "Villageville",
+  "state": "Countyville",
+  "pincode": "67890"
+}
+
+http://127.0.0.1:8000/api/upload/----> for image segregation
+form-data Image--->file description-----> text user---->text
+
+http://127.0.0.1:8000/api/increase_coins/<str:user_id>/ ---> for incerease of zen coins (this has to be updated when user problem has solved)
+
+http://127.0.0.1:8000/api/user_exists/555/ -----> whether user_exists or not ---> GET METHOD
+>>>>>>> db7da377018814ee68b3cb43a78d2f594d7e580f
