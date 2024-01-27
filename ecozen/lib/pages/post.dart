@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, avoid_print, sort_child_properties_last, use_key_in_widget_constructors, library_private_types_in_public_api
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -52,45 +54,25 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-  actions: [
-    Padding(
-      padding: EdgeInsets.only(right: 16.0), // Adjust the padding as needed
-      child: IconButton(
-        icon: Icon(Icons.person,size: 50,),
-        onPressed: () {
-          // Add your onPressed logic here
-        },
-      ),
-    ),
-  ],
-),
-
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Container(
-              //   child: Image.asset(
-              //     'assets/6.png',
-              //     width: 250.0,
-              //     height: 200.0,
-              //   ),
-              // ),
               Text(
-              'Image Picker',
-              style: TextStyle(
-                fontSize: 54.0,
-                fontWeight: FontWeight.bold,
-                foreground: Paint()
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = 1.0
-                ..color = Colors.black,
+                'Image Picker',
+                style: TextStyle(
+                  fontSize: 54.0,
+                  fontWeight: FontWeight.bold,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 1.0
+                    ..color = Colors.black,
+                ),
               ),
-            ),
-              SizedBox(height: 150,),
+              SizedBox(
+                height: 150,
+              ),
               _pickedImage != null
                   ? Stack(
                       alignment: Alignment.topRight,
@@ -117,8 +99,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                               shape: BoxShape.circle,
                               color: Colors.white,
                             ),
-                            child:
-                                Icon(Icons.close, color: Colors.black),
+                            child: Icon(Icons.close, color: Colors.black),
                           ),
                         ),
                       ],
