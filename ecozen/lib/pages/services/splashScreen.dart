@@ -1,4 +1,4 @@
-import 'package:ecozen/pages/loginPage.dart';
+import 'package:ecozen/pages/authPage.dart';
 import 'package:ecozen/pages/services/pagesService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
