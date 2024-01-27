@@ -52,7 +52,7 @@ class UploadedImage(models.Model):
 
 class AdminUser(models.Model):
     admin_user = models.TextField(primary_key=True, unique=True)
-    phone_number = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=15,blank = False, null=False)
     email = models.EmailField(unique=True,null=True, blank=True)
     name = models.CharField(max_length=255,null=True, blank=True)
     address = models.TextField(null=True, blank=True)
