@@ -3,13 +3,15 @@ from django.http import HttpResponse
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from .models import UserModel, UserProblem,UploadedImage
+from .models import UserModel, UserProblem,UploadedImage,ZenCoins
 from .serializers import UserModelSerializer,UserProblemSerializer
 from rest_framework.views import APIView
 from rest_framework import status
 from roboflow import Roboflow
 from dotenv import load_dotenv
 import os
+from django.shortcuts import get_object_or_404
+
 
 load_dotenv()
 
@@ -90,6 +92,17 @@ class ImageUploadView(APIView):
                 return Response({'message': f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class IncreaseCoinsAPIView(APIView):
+    def post(self, request, user_id):
+        user = get_object_or_404(UserModel, user=user_id)
+        zen_coins, created = ZenCoins.objects.get_or_create(user=user)
+        zen_coins.zen_coins += 1
+        zen_coins.save()
+        return Response({"detail": "Zen Coins increased successfully."}, status=status.HTTP_200_OK)
+    
+
 
 
 
