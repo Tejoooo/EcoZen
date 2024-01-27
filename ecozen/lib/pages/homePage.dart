@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> images = ['assets/1.jpg', 'assets/2.jpg', 'assets/3.jpg']; // Add more image paths
+  final List<String> images = ['assets/3.jpg', 'assets/2.jpg', 'assets/7.jpg']; // Add more image paths
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +27,18 @@ class _HomePageState extends State<HomePage> {
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            child: Image.asset(
-              'assets/5.png',
-              width: 550.0,
-              height: 400.0,
-            )
-          ),
+          SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Welcome to Our App',
+              'EcoZen',
               style: TextStyle(
-                fontSize: 24.0,
+                fontSize: 54.0,
                 fontWeight: FontWeight.bold,
+                foreground: Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 1.0
+                ..color = Colors.black,
               ),
             ),
           ),
@@ -53,11 +51,9 @@ class _HomePageState extends State<HomePage> {
             ),
             items: images.map((imagePath) {
               return 
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: Container(
-                  width: 450.0,
-                  height: 450.0,
+              Container(
+                  width: 400.0,
+                  height: 200.0,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.white,
@@ -67,9 +63,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Image.asset(
                     imagePath,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
-                ),
                 );
             }).toList(),
           ),
