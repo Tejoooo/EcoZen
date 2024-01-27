@@ -4,7 +4,8 @@ class MyBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onItemTapped;
 
-  MyBottomNavigationBar({required this.currentIndex, required this.onItemTapped});
+  MyBottomNavigationBar(
+      {required this.currentIndex, required this.onItemTapped});
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +30,13 @@ class MyBottomNavigationBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           backgroundColor: Colors.black,
-          icon: Icon(Icons.account_circle),
-          label: 'Account',
+          icon: Icon(Icons.monetization_on),
+          label: 'Zen Coins',
         ),
         BottomNavigationBarItem(
           backgroundColor: Colors.black,
-          icon: Icon(Icons.monetization_on),
-          label: 'Zen Coins',
+          icon: Icon(Icons.account_circle),
+          label: 'Account',
         ),
       ],
     );
