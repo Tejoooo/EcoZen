@@ -4,7 +4,7 @@ import 'package:ecozen/pages/account.dart';
 import 'package:ecozen/pages/heatmaps.dart';
 import 'package:ecozen/pages/homePage.dart';
 import 'package:ecozen/pages/post.dart';
-import 'package:ecozen/pages/services/snackBar.dart';
+import 'package:ecozen/controllers/snackBar.dart';
 import 'package:ecozen/pages/zencoins.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

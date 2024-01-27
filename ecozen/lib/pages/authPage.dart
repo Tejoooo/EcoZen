@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_final_fields, unused_field, use_build_context_synchronously
 
-import 'package:ecozen/pages/services/snackBar.dart';
+import 'package:ecozen/controllers/snackBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_print, sort_child_properties_last, use_key_in_widget_constructors, library_private_types_in_public_api
 
 import 'dart:io';
-import 'package:ecozen/pages/services/snackBar.dart';
+import 'package:ecozen/controllers/snackBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -42,8 +42,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       request.files.add(await http.MultipartFile.fromPath('image', filePath));
       request.fields['description'] = 'firstimage';
       request.fields['user'] = '555555555';
-      request.fields['latitude']= '22.1';
-      request.fields['longitude']= '79.1';
+      request.fields['latitude'] = '22.1';
+      request.fields['longitude'] = '79.1';
 
       final response = await request.send();
       if (response.statusCode == 200) {
@@ -118,7 +118,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 //                       const SizedBox(
 //                         height: 25,
 //                       ),
-                      
+
 //                     ],
 //                   ),
 //                 )
@@ -129,7 +129,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 //       ),
 //     ));
 //   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -264,8 +263,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-                  // Navigator.pop(context);
-                  // _pickImage(ImageSource.camera);
+          // Navigator.pop(context);
+          // _pickImage(ImageSource.camera);
 
           showDialog(
             context: context,
