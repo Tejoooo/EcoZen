@@ -23,6 +23,11 @@ load_dotenv()
 TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
+distanceConstant = (3.141592653589793 / 180.0) * 6371
+
+def fnDistanceCalculateFunction(x1,x2,y1,y2):
+    result = sqrt(pow(x1-x2,2)+pow(y1-y2,2))
+    return result*distanceConstant
 
 
 def home(request):
@@ -60,7 +65,6 @@ class UserModelView(generics.CreateAPIView):
     
 # For Image uploaded by users
 class ImageUploadView(APIView):
-    global model
     def post(self, request, *args, **kwargs):
         serializer = UserProblemSerializer(data=request.data)
         print(request.data)
@@ -88,6 +92,7 @@ class ImageUploadView(APIView):
                 result = model.predict(f"media/user_problem_images/{image}", confidence=40, overlap=30).json()
                 print(result)
                 # Check if the image is classified as garbage
+                print(result['predictions'][0]['image_path'])
                 if len(result.get('predictions')) > 0:
                     user_problem = UserProblem.objects.create(
                         user=user, description=description, image=result['predictions'][0]['image_path'],latitude=latitude,longitude=longitude,status=UserProblem.ProblemStatus.SUBMITTED
@@ -159,17 +164,17 @@ class OptimalRoutesAPIView(APIView):
         input_longitude = float(request.data.get('longitude'))
 
         # Create a LatLng object from the input latitude and longitude
-        input_point = LatLng(latitude=input_latitude, longitude=input_longitude)
 
         # Define the radius in kilometers
-        radius_km = 10
+        radius_km = 30
 
         # Filter UserProblem instances within the specified radius
         user_problems = UserProblem.objects.all()  # Replace with your actual model queryset
+        l=[]
+        for problem in user_problems:
+            if fnDistanceCalculateFunction(problem.latitude,input_latitude,input_longitude,problem.longitude)<radius_km:
+                l.append([problem.latitude,problem.longitude])
 
-        # Use the provided function to filter points within the radius
-        points_within_radius = self.get_points_within_radius(user_problems, input_point, radius_km)
-        print(points_within_radius)
 
         # Prepare data for the optimal route (you can customize this based on your requirements)
         data = {
@@ -177,10 +182,10 @@ class OptimalRoutesAPIView(APIView):
                 f"order_{i+1}": {
                     "location": {
                         "name": f"Location {i+1}",
-                        "lat": "22.19",
-                        "lng": "22.19"
+                        "lat": l[i][0],
+                        "lng": l[i][1]
                     }
-                } for i, problem in enumerate(points_within_radius)
+                } for i, problem in enumerate(l)
             },
             "fleet": {
                 f"vehicle_{i+1}": {
@@ -190,20 +195,20 @@ class OptimalRoutesAPIView(APIView):
                         "lat": input_latitude,
                         "lng": input_longitude
                     }
-                } for i in range(len(points_within_radius))
+                } for i in range(2)
             }
         }
 
         # Assuming you have a Routific API URL and token
         routific_url = "https://api.routific.com/v1/vrp"
-        routific_token = 'your_routific_token_here'
+        routific_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWI0ZDlmZDcyMWQyYzAwMTg5MWMwY2MiLCJpYXQiOjE3MDYzNTExMDF9.PgF3RkZ8_Bxjs21EjVsiuck8pqx8oAVLoXkKAKa1nnI'
 
         # Convert data payload to bytes
         data_bytes = json.dumps(data).encode('utf-8')
 
         # Create a request object
         req = urllib.request.Request(routific_url, data_bytes, headers={'Content-Type': 'application/json', 'Authorization': 'bearer ' + routific_token})
-
+        print(req)
         try:
             # Get route from Routific
             with urllib.request.urlopen(req) as response:
@@ -213,91 +218,6 @@ class OptimalRoutesAPIView(APIView):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    def get_points_within_radius(self, all_points, center, radius):
-        points_within_radius = []
-
-        for point in all_points:
-            distance = self.calculate_haversine_distance(center, point)
-            if distance <= radius:
-                points_within_radius.append(point)
-
-        return points_within_radius
-
-    def calculate_haversine_distance(self, point1, point2):
-        # Radius of the Earth in kilometers
-        earth_radius = 6371.0
-
-        def degrees_to_radians(degrees):
-            return degrees * (3.141592653589793 / 180.0)
-
-        def haversine(theta):
-            return sin(theta / 2) ** 2
-
-        def get_distance(p1, p2):
-            lat1 = degrees_to_radians(p1.latitude)
-            lon1 = degrees_to_radians(p1.longitude)
-            lat2 = degrees_to_radians(p2.latitude)
-            lon2 = degrees_to_radians(p2.longitude)
-
-            d_lat = lat2 - lat1
-            d_lon = lon2 - lon1
-
-            a = haversine(d_lat) + cos(lat1) * cos(lat2) * haversine(d_lon)
-            c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-            return earth_radius * c  # Distance in kilometers
-
-        return get_distance(point1, point2)
-
-class LatLng:
-    def __init__(self, latitude, longitude):
-        self.latitude = latitude
-        self.longitude = longitude
-
-    def __repr__(self):
-        return f"LatLng({self.latitude}, {self.longitude})"
-
-
-class LatLng:
-    def _init_(self, latitude, longitude):
-        self.latitude = latitude
-        self.longitude = longitude
-
-def calculate_haversine_distance(point1, point2):
-    # Radius of the Earth in kilometers
-    earth_radius = 6371.0
-
-    def degrees_to_radians(degrees):
-        return degrees * (3.141592653589793 / 180.0)
-
-    def haversine(theta):
-        return sin(theta / 2) ** 2
-
-    def get_distance(p1, p2):
-        lat1 = degrees_to_radians(p1.latitude)
-        lon1 = degrees_to_radians(p1.longitude)
-        lat2 = degrees_to_radians(p2.latitude)
-        lon2 = degrees_to_radians(p2.longitude)
-
-        d_lat = lat2 - lat1
-        d_lon = lon2 - lon1
-
-        a = haversine(d_lat) + cos(lat1) * cos(lat2) * haversine(d_lon)
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return earth_radius * c  # Distance in kilometers
-
-    return get_distance(point1, point2)
-
-def get_points_within_radius(all_points, center, radius):
-    points_within_radius = []
-
-    for point in all_points:
-        distance = calculate_haversine_distance(center, point)
-        if distance <= radius:
-            points_within_radius.append(point)
-
-    return points_within_radius
 
 
     

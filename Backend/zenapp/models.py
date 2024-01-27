@@ -35,9 +35,18 @@ class ZenCoins(models.Model):
 class UploadedImage(models.Model):
     image = models.ImageField(upload_to='user_problem_images/')
 
+class Votes(models.Model):
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    problem = models.ForeignKey(UserProblem, on_delete=models.CASCADE)
+    votes = models.IntegerField(default=0)
+
+    class Meta:
+        # Define a composite primary key
+        unique_together = ('user', 'problem')
+
 class AdminUser(models.Model):
     admin_user = models.TextField(primary_key=True, unique=True)
-    phone_number = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=10)
     email = models.EmailField(unique=True,null=True, blank=True)
     name = models.CharField(max_length=255,null=True, blank=True)
     address = models.TextField(null=True, blank=True)
@@ -46,3 +55,5 @@ class AdminUser(models.Model):
     pincode = models.CharField(max_length=10, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
