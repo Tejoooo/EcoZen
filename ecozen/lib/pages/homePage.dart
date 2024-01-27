@@ -10,28 +10,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> images = [
-    'assets/9.png',
-    'assets/2.jpg',
-    'assets/7.jpg'
-  ]; 
+  final List<String> images = ['assets/9.png', 'assets/2.jpg', 'assets/7.jpg'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Home Page"),
-        centerTitle: true,
-        elevation: 0.0,
-        backgroundColor: Colors.grey[50],
-      ),
       body: Container(
         color: Colors.grey[50],
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 16),
+              SizedBox(height: 25),
               Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Stack(
@@ -102,10 +92,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   )),
               StepCarousel(),
-
               SizedBox(height: 20.0),
-              
-              
             ],
           ),
         ),

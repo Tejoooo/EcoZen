@@ -56,8 +56,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       final response = await request.send();
       String responseBody = await response.stream.bytesToString();
       Map<String, dynamic> jsonResponse = json.decode(responseBody);
-      if (response.statusCode == 200) {
-        final responseData = await response.stream.bytesToString();
+      if (response.statusCode == 201) {
         SuccessSnackBar(context, 'Image Stored Succesfully');
         setState(() {
           _pickedImage = null;
@@ -67,7 +66,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             'Failed to upload image, Error: ${jsonResponse['message']}');
       }
     } catch (e) {
-      ErrorSnackBar(context, 'Error uploading image: $e');
+      ErrorSnackBar(context, e.toString());
     }
     setState(() {
       _isLoading = false;
@@ -306,6 +305,16 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                       },
                       child: Text(
                         'Camera',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _pickImage(ImageSource.gallery);
+                      },
+                      child: Text(
+                        'Gallery',
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
