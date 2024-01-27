@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "342146811607",
+    "project_id": "zenapp-temporary-appli",
+    "storage_bucket": "zenapp-temporary-appli.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342146811607:android:5343d28c72c977576c5292",
+        "android_client_info": {
+          "package_name": "com.example.demo_zen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVEe3x3FFODWWDGhQbcv0lsxIMfow6CpQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342146811607:android:8f8dfed2079977a66c5292",
+        "android_client_info": {
+          "package_name": "com.example.ecozen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVEe3x3FFODWWDGhQbcv0lsxIMfow6CpQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
