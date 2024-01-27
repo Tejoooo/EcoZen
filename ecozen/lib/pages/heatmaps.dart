@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_final_fields, prefer_collection_literals, unnecessary_null_comparison
 
-import 'package:ecozen/pages/services/geoLocationGet.dart';
+import 'package:ecozen/controllers/geoLocationGet.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -93,9 +93,9 @@ class _HeatMapsState extends State<HeatMaps> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           debugPrint("geting location");
-          getCurrentLocation().then((value){
+          getCurrentLocation().then((value) {
             debugPrint(value.latitude.toString());
-            debugPrint(value.longitude.toString()); 
+            debugPrint(value.longitude.toString());
           });
         },
         child: Icon(Icons.my_location),
