@@ -72,30 +72,58 @@ class _PagesServiceState extends State<PagesService> {
             body: _pages[_currentIndex],
             bottomNavigationBar: MyBottomNavigationBar(
                 currentIndex: _currentIndex, onItemTapped: onItemTapped))
-        : Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: SendVerificationMail,
-                    child: Text("Send Verification Mail"),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  ElevatedButton(
-                    onPressed: checkVerificationOfEmail,
-                    child: Text("Verify"),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text("SignOut"),
-                  ),
-                ],
+        : WillPopScope(
+            onWillPop: () async {
+              if (_currentIndex != 0) {
+                setState(() {
+                  _currentIndex = 0;
+                });
+                return Future(() => false);
+              }
+              bool res = await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Warning'),
+                  content: const Text('Do you really want to exit'),
+                  actions: [
+                    TextButton(
+                      child: const Text('Yes'),
+                      onPressed: () => Navigator.pop(context, true),
+                    ),
+                    TextButton(
+                      child: const Text('No'),
+                      onPressed: () => Navigator.pop(context, false),
+                    ),
+                  ],
+                ),
+              );
+              return Future.value(res);
+            },
+            child: Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: SendVerificationMail,
+                      child: Text("Send Verification Mail"),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    ElevatedButton(
+                      onPressed: checkVerificationOfEmail,
+                      child: Text("Verify"),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text("SignOut"),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
