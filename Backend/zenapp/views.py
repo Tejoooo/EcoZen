@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from .models import UserModel, UserProblem, UserProblemImage,UploadedImage
+from .models import UserModel, UserProblem,UploadedImage
 from .serializers import UserModelSerializer,UserProblemSerializer
 from rest_framework.views import APIView
 from rest_framework import status
@@ -20,20 +20,27 @@ def home(request):
 class UserModelView(generics.CreateAPIView):
     serializer_class = UserModelSerializer
     def create(self, request, *args, **kwargs):
-        # Retrieve Firebase user ID from the request
-        user_id = self.kwargs.get('user_id',None)
-        print(self.kwargs)
-        print(user_id)
-        user_id=int(user_id)
-        if user_id:
-            user_identifier, created = UserModel.objects.get_or_create(user=user_id)
+        try:
+            user_id = request.data.get('user_id')
+            email = request.data.get('email')
+            phone_number = request.data.get('phone_number')
+            name=request.data.get('name')
+            address=request.data.get('address')
+            city=request.data.get('city',None)
+            state=request.data.get('state',None)
+            pincode=request.data.get('pincode',None)
+            
+            if user_id:
+                user_identifier, created = UserModel.objects.get_or_create(user=user_id,email=email,phone_number=phone_number,name=name,address=address,city=city,state=state,pincode=pincode)
 
-            if created:
-                return Response({"detail": "User ID created successfully."}, status=status.HTTP_201_CREATED)
-            else:
-                return Response({"detail": "User ID already exists."}, status=status.HTTP_200_OK)
-
-        return Response({"detail": "Firebase user ID not found in the request."}, status=status.HTTP_400_BAD_REQUEST)
+                if created:
+                    return Response({"detail": "User ID created successfully."}, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({"detail": "User ID already exists."}, status=status.HTTP_200_OK)
+        except ValueError:
+            return Response({"detail": "Invalid user ID provided."}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"detail": f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 # For Image uploaded by users
 class ImageUploadView(APIView):
@@ -41,33 +48,37 @@ class ImageUploadView(APIView):
         serializer = UserProblemSerializer(data=request.data)
 
         if serializer.is_valid():
-            print(serializer.validated_data)
-            user = serializer.validated_data.get('user')
-            description = serializer.validated_data['description']
-            image = request.FILES.get('image', None)
-            UploadedImage.objects.create(image=image)
+            try:
+                user = serializer.validated_data.get('user')
+                description = serializer.validated_data['description']
+                image = request.FILES.get('image', None)
+                UploadedImage.objects.create(image=image)
+                #print(user)
+                #user=UserModel.objects.get(user=user)
 
-            if image:
-                rf = Roboflow(api_key=os.getenv('api_key'))
-                project = rf.workspace().project("garbage_detection-wvzwv")
-                model = project.version(9).model
-                result = model.predict(f"user_problem_images/{image}", confidence=40, overlap=30).json()
-
-                # Check if the image is classified as garbage
-                if len(result.get('predictions')) > 0:
-                    user_problem = UserProblem.objects.create(
-                        user=user, description=description, status=UserProblem.ProblemStatus.TAKEN
-                    )
-                    UserProblemImage.objects.create(user_problem=user_problem, image=image)
-                    # Save the data to the database
-
-                    return Response({'message': 'Image is classified as garbage. Data stored.'}, status=status.HTTP_201_CREATED)
+                if image:
+                    rf = Roboflow(api_key=os.getenv('api_key'))
+                    project = rf.workspace().project("garbage_detection-wvzwv")
+                    model = project.version(9).model
+                    result = model.predict(f"user_problem_images/{image}", confidence=40, overlap=30).json()
+                    # Check if the image is classified as garbage
+                    if len(result.get('predictions')) > 0:
+                        user_problem = UserProblem.objects.create(
+                            user=user, description=description,image=image, status=UserProblem.ProblemStatus.SUBMITTED
+                        )
+                        return Response({'message': 'Image is classified as garbage. Data stored.'}, status=status.HTTP_201_CREATED)
+                    else:
+                        try:
+                            image_instance = UploadedImage.objects.get(image=f"user_problem_images/{image}")
+                            image_instance.delete()
+                            print(f"Image {image} deleted successfully.")
+                        except UploadedImage.DoesNotExist:
+                            print(f"Image {image} not found.")
+                        return Response({'message': 'Image is not classified as garbage. Data not stored.'}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    #image=UploadedImage.objects.get(image=image)
-                    #image.delete()
-                    return Response({'message': 'Image is not classified as garbage. Data not stored.'}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({'message': 'No image file provided.'}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'message': 'No image file provided.'}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                return Response({'message': f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

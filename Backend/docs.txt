@@ -1,1 +1,11 @@
 empty for now
+
+http://127.0.0.1:8000/api/user/ ---> api for creating of user 
+name,user_id,address,phone_number,email---> mandotory fields
+city,state,pincode--> not mandatory
+send request in json (body)
+
+http://127.0.0.1:8000/api/upload/ -----> api for image upload
+form-data
+Image-->file type,user--->text,descrition--->text ,title-->not mandatory text
+

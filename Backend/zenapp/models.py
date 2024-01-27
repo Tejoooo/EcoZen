@@ -1,22 +1,30 @@
 from django.db import models
 
+from django.db import models
+
 class UserModel(models.Model):
-    user = models.IntegerField(primary_key=True, unique=True)
-    def __str__(self):
-        return f"{self.user}"
+    user = models.TextField(primary_key=True, unique=True)
+    phone_number = models.CharField(max_length=15)
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=255)
+    address = models.TextField()
+    city = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=255, blank=True, null=True)
+    pincode = models.CharField(max_length=10, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     
 class UserProblem(models.Model):
     class ProblemStatus(models.TextChoices):
-        TAKEN = 'Taken', 'Taken'
+        SUBMITTED = 'Submitted', 'Submitted'
         IN_PROGRESS = 'In Progress', 'In Progress'
         SOLVED = 'Solved', 'Solved'
-    user = models.ForeignKey(UserModel, related_name='images', on_delete=models.CASCADE)
+
+    user = models.ForeignKey(UserModel, related_name='user_problems', on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField()
-    status = models.CharField(max_length=20, choices=ProblemStatus.choices, default=ProblemStatus.TAKEN)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    
-class UserProblemImage(models.Model):
-    user_problem = models.ForeignKey(UserProblem, related_name='images', on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, choices=ProblemStatus.choices, default=ProblemStatus.SUBMITTED)
     image = models.ImageField(upload_to='user_problem_images/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
