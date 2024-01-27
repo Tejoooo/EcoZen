@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
+import 'package:ecozen/constants.dart';
 import 'package:ecozen/pages/account.dart';
 import 'package:ecozen/pages/heatmaps.dart';
 import 'package:ecozen/pages/homePage.dart';
@@ -8,7 +9,7 @@ import 'package:ecozen/controllers/snackBar.dart';
 import 'package:ecozen/pages/zencoins.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import '../../controllers/bottomnavbar.dart';
 
 class PagesService extends StatefulWidget {
@@ -27,6 +28,7 @@ class _PagesServiceState extends State<PagesService> {
   void initState() {
     super.initState();
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    checkForUserInDB();
     if (!isEmailVerified) {
       SendVerificationMail();
     }
@@ -37,6 +39,23 @@ class _PagesServiceState extends State<PagesService> {
       ZenCoins(),
       Account()
     ];
+  }
+
+  void checkForUserInDB() async {
+    final jsonResponse = await http.get(Uri.parse(backendURL +
+        "/api/user_exists/" +
+        FirebaseAuth.instance.currentUser!.uid.toString()));
+    if (jsonResponse.statusCode != 200) {
+      User user = FirebaseAuth.instance.currentUser!;
+      final newJsonResponse = await http.post(
+        Uri.parse("${backendURL}/api/user/"),
+        body: {"user_id": user.uid.toString(), "email": user.email.toString()},
+      );
+      print(newJsonResponse.body);
+      if (newJsonResponse.statusCode != 201) {
+        ErrorSnackBar(context, "User Not Created in Postgre DB");
+      }
+    }
   }
 
   void SendVerificationMail() async {

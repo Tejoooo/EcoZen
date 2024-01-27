@@ -1,5 +1,6 @@
 class ProblemModel {
   final String uid;
+  final String pid;
   final String description;
   final String status;
   final String image;
@@ -9,6 +10,7 @@ class ProblemModel {
 
   const ProblemModel(
     this.uid,
+    this.pid,
     this.description,
     this.status,
     this.image,
@@ -19,7 +21,8 @@ class ProblemModel {
 
   factory ProblemModel.fromJSON(Map<String, dynamic> json) {
     return ProblemModel(
-      json['user'],
+      json['user'].toString(),
+      json['pk'].toString(),
       json['description'],
       json['status'] ?? "Submitted",
       json['image'],
