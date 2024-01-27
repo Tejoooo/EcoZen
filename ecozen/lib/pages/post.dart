@@ -1,14 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:ecozen/controllers/bottomnavbar.dart';
-import 'package:ecozen/pages/account.dart';
-import 'package:ecozen/pages/heatmaps.dart';
-import 'package:ecozen/pages/homePage.dart';
-import 'package:ecozen/pages/zencoins.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
 
 class ImagePickerWidget extends StatefulWidget {
   @override
@@ -17,7 +10,6 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   XFile? _pickedImage;
-  int _currentIndex = 0;
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
     try {
@@ -64,91 +56,57 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     }
   }
 
-  void onItemTapped(int index) {
-    // Handle bottom navigation item tap
-    setState(() {
-      _currentIndex = index;
-    });
-    switch (_currentIndex) {
-    case 0:
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-      break;
-    case 1:
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HeatMaps()));
-      break;
-    case 2:
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ImagePickerWidget()));
-      break;
-    case 3:
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ZenCoins()));
-      break;
-    case 4:
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Account()));
-      break;
-  }
-  }
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Image Picker Widget'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _pickedImage != null
-                ? Image.file(File(_pickedImage!.path))
-                : Text('No Image Selected'),
-
-            if (_pickedImage != null)
-              ElevatedButton(
-                onPressed: () async {
-                  await _uploadImage(_pickedImage!.path);
-                },
-                child: Text('Upload'),
-              ),
-            SizedBox(height: 20),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _pickedImage != null
+              ? Image.file(File(_pickedImage!.path))
+              : Text('No Image Selected'),
+          if (_pickedImage != null)
             ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Choose Image Source'),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context); // Close the dialog
-                              _pickImage(ImageSource.gallery);
-                            },
-                            child: Text('Gallery'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context); // Close the dialog
-                              _pickImage(ImageSource.camera);
-                            },
-                            child: Text('Camera'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
+              onPressed: () async {
+                await _uploadImage(_pickedImage!.path);
               },
-              child: Text('Pick Image'),
+              child: Text('Upload'),
             ),
-          ],
-        ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Choose Image Source'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context); // Close the dialog
+                            _pickImage(ImageSource.gallery);
+                          },
+                          child: Text('Gallery'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context); // Close the dialog
+                            _pickImage(ImageSource.camera);
+                          },
+                          child: Text('Camera'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+            child: Text('Pick Image'),
+          ),
+        ],
       ),
-      bottomNavigationBar: MyBottomNavigationBar(currentIndex: _currentIndex, onItemTapped: onItemTapped)
     );
   }
 }
-
-
