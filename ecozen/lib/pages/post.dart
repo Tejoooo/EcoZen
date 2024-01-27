@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:ecozen/pages/services/snackBar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,12 +33,15 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   }
 
   Future<void> _uploadImage(String filePath) async {
-    final url = Uri.parse('http://172.20.10.7:8000/api/upload/');
+    final url = Uri.parse('http://172.20.10.14:8000/api/upload/');
     try {
       final request = http.MultipartRequest('POST', url);
+      ErrorSnackBar(context, "");
       request.files.add(await http.MultipartFile.fromPath('image', filePath));
       request.fields['description'] = 'firstimage';
-      request.fields['user'] = '1';
+      request.fields['user'] = '555555555';
+      request.fields['latitude']= '22.1';
+      request.fields['longitude']= '79.1';
 
       final response = await request.send();
       if (response.statusCode == 200) {
@@ -48,6 +54,80 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       print('Error uploading image: $e');
     }
   }
+
+// void imagePickerOption() {
+//     Get.bottomSheet(SingleChildScrollView(
+//       child: ClipRRect(
+//         borderRadius: const BorderRadius.only(
+//           topLeft: Radius.circular(20),
+//           topRight: Radius.circular(20),
+//         ),
+//         // ignore: avoid_unnecessary_containers
+//         child: Container(
+//           color: Colors.white,
+//           height: 200,
+//           width: 400,
+//           child: Container(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Container(
+//                   child: Column(
+//                     children: [
+//                       Container(
+//                         padding: EdgeInsets.only(
+//                             top: 15, left: 120, right: 120, bottom: 15),
+//                         child: Column(
+//                           children: [
+//                             InkWell(
+//                                 onTap: () {
+//                         Navigator.pop(context);
+//                         _pickImage(ImageSource.camera);
+//                                         },
+//                                 child: Container(
+//                                   padding: const EdgeInsets.all(30),
+//                                   decoration: BoxDecoration(
+//                                     borderRadius: BorderRadius.circular(100),
+//                                     color: Colors.green[200]
+//                                   ),
+//                                   child: Icon(
+//                                     Icons.camera_alt,
+//                                     size: 30,
+//                                     color: Colors.black,
+//                                   ),
+//                                 )),
+//                             const SizedBox(
+//                               height: 10,
+//                             ),
+//                             Text(
+//                               "Take Photo",
+//                               style: TextStyle(
+//                                   fontSize: 20,
+//                                   fontWeight: FontWeight.w300,
+//                                   ),
+//                             ),
+//                           ],
+//                         ),
+//                         decoration: BoxDecoration(
+//                             border:
+//                                 Border.all(style: BorderStyle.solid, width: .2),
+//                             borderRadius: BorderRadius.circular(10)),
+//                       ),
+//                       const SizedBox(
+//                         height: 25,
+//                       ),
+                      
+//                     ],
+//                   ),
+//                 )
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     ));
+//   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +271,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   ),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.black,
-                    backgroundColor: Colors.green[50],
+                    backgroundColor: Colors.green[300],
                     elevation: 0,
                   ),
                 ),
@@ -203,6 +283,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+                  // Navigator.pop(context);
+                  // _pickImage(ImageSource.camera);
+
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -215,16 +298,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _pickImage(ImageSource.gallery);
-                      },
-                      child: Text(
-                        'Gallery',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
@@ -241,8 +314,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             },
           );
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.green[50],
+        child: Icon(Icons.camera_alt_outlined),
+        backgroundColor: Colors.green[300],
       ),
     );
   }
