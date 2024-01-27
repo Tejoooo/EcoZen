@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_constructors, prefer_final_fields, unused_field
+// ignore_for_file: prefer_const_constructors, prefer_final_fields, unused_field, use_build_context_synchronously
 
+import 'package:ecozen/pages/services/snackBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -127,17 +128,35 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future signInWithEmailAndPassword() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailLoginController.text.trim(),
-        password: _passwordLoginController.text.trim());
+    if (_emailLoginController.text.isEmpty) {
+      ErrorSnackBar(context, "Email Field is Required");
+    } else if (_passwordLoginController.text.isEmpty) {
+      ErrorSnackBar(context, "Password Field is Required");
+    } else if (_passwordLoginController.text.length < 6) {
+      ErrorSnackBar(context, "Password should contain atlease 6 characters");
+    } else {
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: _emailLoginController.text.trim(),
+            password: _passwordLoginController.text.trim());
+      } on FirebaseAuthException catch (e) {
+        ErrorSnackBar(context, e.toString());
+      }
+    }
   }
 
   Future signUpWithEmailAndPassword() async {
     if (_passwordSignUpController.text ==
         _confirmPasswordSignUpController.text) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailSignUpController.text.trim(),
-          password: _passwordSignUpController.text.trim());
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailSignUpController.text.trim(),
+            password: _passwordSignUpController.text.trim());
+      } on FirebaseAuthException catch (e) {
+        ErrorSnackBar(context, e.toString());
+      }
+    } else {
+      ErrorSnackBar(context, "Both Passwords should be same");
     }
   }
 }
