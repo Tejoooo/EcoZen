@@ -1,6 +1,5 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ecozen/controllers/carousel.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,14 +11,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<String> images = [
-    'assets/3.jpg',
+    'assets/9.png',
     'assets/2.jpg',
     'assets/7.jpg'
-  ]; // Add more image paths
+  ]; 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Home Page"),
+        centerTitle: true,
+        elevation: 0.0,
+        backgroundColor: Colors.grey[50],
+      ),
       body: Container(
         color: Colors.grey[50],
         child: SingleChildScrollView(
@@ -28,64 +33,79 @@ class _HomePageState extends State<HomePage> {
             children: [
               SizedBox(height: 16),
               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'EcoZen',
-                  style: TextStyle(
-                    fontSize: 54.0,
-                    fontWeight: FontWeight.bold,
-                    foreground: Paint()
-                      ..style = PaintingStyle.stroke
-                      ..strokeWidth = 1.0
-                      ..color = Colors.black,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              CarouselSlider(
-                options: CarouselOptions(
-                  height: 300.0,
-                  autoPlay: true,
-                  aspectRatio: 16 / 9,
-                  enlargeCenterPage: true,
-                ),
-                items: images.map((imagePath) {
-                  return Container(
-                    width: 400.0,
-                    height: 200.0,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 3.0,
+                  padding: const EdgeInsets.all(16.0),
+                  child: Stack(
+                    children: [
+                      // Text for the border
+                      Text(
+                        'EcoZen',
+                        style: TextStyle(
+                          fontSize: 54.0,
+                          fontWeight: FontWeight.bold,
+                          foreground: Paint()
+                            ..style = PaintingStyle.stroke
+                            ..strokeWidth = 1.0
+                            ..color = Colors.black,
+                        ),
+                        textAlign: TextAlign.left,
                       ),
-                      // borderRadius: BorderRadius.circular(100.0),
-                    ),
-                    child: Image.asset(
-                      imagePath,
-                      fit: BoxFit.fill,
-                    ),
-                  );
-                }).toList(),
+                      // Text for the fill
+                      Text(
+                        'EcoZen',
+                        style: TextStyle(
+                          fontSize: 54.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white, // Fill color
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  )),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30.0),
+                  child: Image.asset('assets/1.png'),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                width: 350,
               ),
+              SizedBox(height: 30),
+              Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Stack(
+                    children: [
+                      // Text for the border
+                      Text(
+                        'MISSION',
+                        style: TextStyle(
+                          fontSize: 54.0,
+                          fontWeight: FontWeight.bold,
+                          foreground: Paint()
+                            ..style = PaintingStyle.stroke
+                            ..strokeWidth = 1.0
+                            ..color = Colors.black,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      // Text for the fill
+                      Text(
+                        'MISSION',
+                        style: TextStyle(
+                          fontSize: 54.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white, // Fill color
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  )),
+              StepCarousel(),
+
               SizedBox(height: 20.0),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Solving Waste Management Issues',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  'Our mission is to create a sustainable future by addressing waste management challenges. Join us in making the world a cleaner place!',
-                  style: TextStyle(fontSize: 16.0),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              
+              
             ],
           ),
         ),

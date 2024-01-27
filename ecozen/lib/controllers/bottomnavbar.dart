@@ -25,7 +25,7 @@ class MyBottomNavigationBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           backgroundColor: Colors.black,
-          icon: Icon(Icons.report_problem),
+          icon: Icon(Icons.add_a_photo_outlined),
           label: 'Problem',
         ),
         BottomNavigationBarItem(
