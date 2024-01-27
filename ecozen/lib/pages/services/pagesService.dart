@@ -49,6 +49,11 @@ class _PagesServiceState extends State<PagesService> {
   }
 
   void checkVerificationOfEmail() async {
+    try {
+      await FirebaseAuth.instance.currentUser!.reload();
+    } on FirebaseAuthException catch (e) {
+      ErrorSnackBar(context, e.toString());
+    }
     setState(() {
       isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     });
