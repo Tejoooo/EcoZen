@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_final_fields, prefer_collection_literals, unnecessary_null_comparison
+// ignore_for_file: prefer_const_constructors, prefer_final_fields, prefer_collection_literals, unnecessary_null_comparison, use_build_context_synchronously, avoid_function_literals_in_foreach_calls, unnecessary_brace_in_string_interps, non_constant_identifier_names
 
 import 'dart:convert';
 
@@ -86,8 +86,7 @@ class _HeatMapsState extends State<HeatMaps> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: Column(
               children: [
-                Image.network(backendURL + image) ??
-                    CircularProgressIndicator(),
+                Image.network(backendURL + image),
                 SizedBox(height: 10),
                 Center(
                   child: Text(message),
