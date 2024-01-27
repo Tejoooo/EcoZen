@@ -16,3 +16,5 @@ http://127.0.0.1:8000/api/upload/----> for image segregation
 form-data Image--->file description-----> text user---->text
 
 http://127.0.0.1:8000/api/increase_coins/<str:user_id>/ ---> for incerease of zen coins (this has to be updated when user problem has solved)
+
+http://127.0.0.1:8000/api/user_exists/555/ -----> whether user_exists or not ---> GET METHOD
