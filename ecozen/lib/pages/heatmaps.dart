@@ -1,10 +1,16 @@
 // ignore_for_file: prefer_const_constructors, prefer_final_fields, prefer_collection_literals, unnecessary_null_comparison
 
+import 'dart:convert';
+
+import 'package:ecozen/constants.dart';
 import 'package:ecozen/controllers/geoLocationGet.dart';
+import 'package:ecozen/controllers/snackBar.dart';
+import 'package:ecozen/models/problemModel.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class HeatMaps extends StatefulWidget {
   const HeatMaps({super.key});
@@ -22,22 +28,40 @@ class _HeatMapsState extends State<HeatMaps> {
   @override
   void initState() {
     super.initState();
-
-    // Add some sample markers
-    _addMarker('marker1', LatLng(37.7749, -122.4194));
-    _addMarker('marker2', LatLng(40.7128, -74.0060));
-    _addMarker('marker3', LatLng(34.0522, -118.2437));
-    _addMarker('marker4', LatLng(41.8781, -87.6298));
-    _addMarker('marker5', LatLng(51.5074, -0.1278));
+    getCurrentLocation().then((value) {
+      setState(() {
+        _center = LatLng(value.latitude, value.longitude);
+      });
+      mapController.animateCamera(CameraUpdate.newLatLng(_center));
+    });
+    FetchAllProblems();
   }
 
-  void _addMarker(String markerId, LatLng position) {
+  void FetchAllProblems() async {
+    final response =
+        await http.get(Uri.parse("${backendURL}/api/user-problems/"));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonDataList = jsonDecode(response.body);
+      List<ProblemModel> problemsList =
+          jsonDataList.map((data) => ProblemModel.fromJSON(data)).toList();
+      setState(() {
+        problemsList.forEach((problem) =>
+            _addMarker(problem, LatLng(problem.latitude, problem.longitude)));
+      });
+    } else {
+      ErrorSnackBar(context, "coudn't able to fetch the markers");
+    }
+  }
+
+  void _addMarker(ProblemModel problem, LatLng position) {
     markers.add(
       Marker(
-        markerId: MarkerId(markerId),
+        markerId: MarkerId(problem.uid),
         position: position,
         onTap: () {
-          _onMarkerTapped('Marker $markerId tapped');
+          _onMarkerTapped(
+              '${problem.uid} reported with description ${problem.description}',
+              problem.image);
         },
       ),
     );
@@ -47,7 +71,7 @@ class _HeatMapsState extends State<HeatMaps> {
     mapController = controller;
   }
 
-  void _onMarkerTapped(String message) {
+  void _onMarkerTapped(String message, String image) {
     debugPrint(message);
     Get.bottomSheet(SingleChildScrollView(
       child: ClipRRect(
@@ -62,7 +86,8 @@ class _HeatMapsState extends State<HeatMaps> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: Column(
               children: [
-                Image.asset("assets/download_1.jpg"),
+                Image.network(backendURL + image) ??
+                    CircularProgressIndicator(),
                 SizedBox(height: 10),
                 Center(
                   child: Text(message),
@@ -92,10 +117,11 @@ class _HeatMapsState extends State<HeatMaps> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          debugPrint("geting location");
           getCurrentLocation().then((value) {
-            debugPrint(value.latitude.toString());
-            debugPrint(value.longitude.toString());
+            setState(() {
+              _center = LatLng(value.latitude, value.longitude);
+            });
+            mapController.animateCamera(CameraUpdate.newLatLng(_center));
           });
         },
         child: Icon(Icons.my_location),

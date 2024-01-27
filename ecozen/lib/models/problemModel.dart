@@ -1,13 +1,11 @@
-import 'dart:ffi';
-
 class ProblemModel {
   final String uid;
   final String description;
   final String status;
   final String image;
   final DateTime uploadedAt;
-  final Float latitude;
-  final Float longitude;
+  final double latitude;
+  final double longitude;
 
   const ProblemModel(
     this.uid,
@@ -23,7 +21,7 @@ class ProblemModel {
     return ProblemModel(
       json['user'],
       json['description'],
-      json['status'],
+      json['status'] ?? "Submitted",
       json['image'],
       DateTime.parse(json['uploaded_at'] ?? DateTime.now().toString()),
       json['latitude'],
