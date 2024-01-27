@@ -85,8 +85,8 @@ class ImageUploadView(APIView):
                         print(f"Image {image} deleted successfully.")
                     except UploadedImage.DoesNotExist:
                         print(f"Image {image} not found.")
-
-                    return Response({'message': 'Image is not classified as garbage. Data not stored.'}, status=status.HTTP_400_BAD_REQUEST)
+                    finally:
+                        return Response({'message': 'Image is not classified as garbage. Data not stored.'}, status=status.HTTP_400_BAD_REQUEST)
             
             except Exception as e:
                 return Response({'message': f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -101,6 +101,17 @@ class IncreaseCoinsAPIView(APIView):
         zen_coins.zen_coins += 1
         zen_coins.save()
         return Response({"detail": "Zen Coins increased successfully."}, status=status.HTTP_200_OK)
+    
+class UserExistsAPIView(APIView):
+    def get(self, request, user_id):
+        try:
+            # Try to get the user based on the user_id
+            user = UserModel.objects.get(user=user_id)
+            return Response({"exists": True, "detail": "User exists."}, status=status.HTTP_200_OK)
+
+        except UserModel.DoesNotExist:
+            # User does not exist
+            return Response({"exists": False, "detail": "User does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
 
 
