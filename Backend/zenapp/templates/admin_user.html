@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Locations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #f4f4f4;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>User</h1>
+    <ul>
+        {% for user in user %}
+            <li>
+                <strong>User:</strong> {{ user.admin_user}}
+                <br>
+                <strong>Phone Number:</strong> {{ user.phone_number }}
+                <br>
+                <strong>Longitude:</strong> {{ user.email }}
+            </li>
+        </br>
+        {% endfor %}
+    </ul>
+</body>
+</html>

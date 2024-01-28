@@ -1,0 +1,23 @@
+<!-- user_images.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Images</title>
+</head>
+<body>
+    {% comment %} api/user-problems/ {% endcomment %}
+    <h1>User Images</h1>
+    <ul>
+        {% for image_data in user_images %}
+            <li>
+                <strong>Image:</strong>
+                <img src="{% load static %}{% static image_data.image %}" alt="User Image">
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

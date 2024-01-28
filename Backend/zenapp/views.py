@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from .models import UserModel, UserProblem,UploadedImage,ZenCoins
-from .serializers import UserModelSerializer,UserProblemSerializer
+from .models import UserModel, UserProblem,UploadedImage,ZenCoins,AdminUser
+from .serializers import AdminUserSerializer, UserModelSerializer,UserProblemSerializer
 from rest_framework.views import APIView
 from rest_framework import status
 from roboflow import Roboflow
@@ -15,6 +15,7 @@ import urllib.request
 import json
 from twilio.rest import Client
 from math import radians, sin, cos, sqrt, atan2
+from django.core.exceptions import ObjectDoesNotExist
 
 #from django.contrib.gis.geos import Point
 #from django.contrib.gis.db.models.functions import Distance
@@ -221,8 +222,75 @@ class OptimalRoutesAPIView(APIView):
 
 
     
+class AdminUserAPIView(APIView):
+    def post(self, request):
+        try:
+            user_id = int(request.data.get('user_id'))
+            email = request.data.get('email')
+            phone_number = request.data.get('phone_number')
+            name = request.data.get('name')
+            address = request.data.get('address')
+            city = request.data.get('city', None)
+            state = request.data.get('state', None)
+            pincode = request.data.get('pincode', None)
 
+            if user_id:
+                user_instance, created = AdminUser.objects.get_or_create(
+                    user=user_id,email=email,phone_number=phone_number,name=name,address=address,city=city,state=state,pincode=pincode
+                )
 
+                if created:
+                    return Response({"detail": "User ID created successfully."}, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({"detail": "User ID already exists."}, status=status.HTTP_200_OK)
 
+        except ValueError:
+            return Response({"detail": "Invalid user ID provided."}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"detail": f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def get(self, request, *args, **kwargs):
+        action = kwargs.get('action')
+        if action == 'get_all_user_statuses':
+            unique_statuses = UserProblem.objects.all()
+            return render(request, 'user_statuses.html', {'statuses': unique_statuses})
+        elif action == 'get_all_user_locations':
+            user_locations = UserProblem.objects.all()
+            
+            return render(request, 'user_locations.html', {'locations': user_locations})
+        elif action == 'get_all_user_images':
+            user_images = UserProblem.objects.values('image')
+            print(user_images)
+            return render(request, 'user_images.html', {'user': user_images})
+        elif action == 'get_all_user_admins':
+            user_admins = AdminUser.objects.all()
+            print(user_admins)
+            return render(request, 'admin_user.html', {'user': user_admins})
+        else:
+            return render(request, 'admin_user.html')
+    
+        
+    def get_all_user_images(self,request):
+        try:
+            print("hii")
+            user = UserProblem.objects.all()
+            print(user)
+            return render(request, 'user_images.html', {'user': user})
+        except ObjectDoesNotExist:
+            return Response({"error": "No user images found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)    
+        
+    def get_all_user_statuses(self, request):
+        try:
+            unique_statuses = UserProblem.objects.values_list('status', flat=True).distinct()
+            return Response({"statuses": list(unique_statuses)}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
+    def get_all_user_locations(self, request):
+        try:
+            user_locations = UserProblem.objects.values('latitude', 'longitude').distinct()
+            return Response({"locations": list(user_locations)}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
