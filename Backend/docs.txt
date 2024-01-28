@@ -13,7 +13,7 @@ http://127.0.0.1:8000/api/user/---> for creating the users
 }
 
 http://127.0.0.1:8000/api/upload/----> for image segregation
-form-data Image--->file description-----> text user---->text
+form-data Image--->file description-----> text user---->text latitude and longitude ---->float
 
 http://127.0.0.1:8000/api/increase_coins/<str:user_id>/ ---> for incerease of zen coins (this has to be updated when user problem has solved)
 
