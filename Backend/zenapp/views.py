@@ -27,9 +27,9 @@ TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
 distanceConstant = (3.141592653589793 / 180.0) * 6371
-#rf = Roboflow(api_key=os.getenv('api_key'))
-#project = rf.workspace().project("garbage_detection-wvzwv")
-#model = project.version(9).model
+rf = Roboflow(api_key=os.getenv('api_key'))
+project = rf.workspace().project("garbage_detection-wvzwv")
+model = project.version(9).model
 
 def fnDistanceCalculateFunction(x1,x2,y1,y2):
     result = sqrt(pow(x1-x2,2)+pow(y1-y2,2))
