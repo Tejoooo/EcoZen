@@ -1,6 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
+import 'package:ecozen/constants.dart';
+import 'package:ecozen/controllers/snackBar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class ZenCoins extends StatefulWidget {
   const ZenCoins({super.key});
@@ -11,6 +17,26 @@ class ZenCoins extends StatefulWidget {
 
 class _ZenCoinsState extends State<ZenCoins> {
   int zenCoins = 450;
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  void _init() async {
+    try {
+      final response = await http.get(Uri.parse(backendURL +
+          "/api/zencoin/${FirebaseAuth.instance.currentUser!.uid}"));
+      print(jsonDecode(response.body));
+      setState(() {
+        zenCoins = jsonDecode(response.body)['balance'];
+      });
+    } catch (e) {
+      ErrorSnackBar(context, e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -22,14 +48,9 @@ class _ZenCoinsState extends State<ZenCoins> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Text(
-                  //   "Zen Coins",
-                  //   style: TextStyle(
-                  //     fontSize: 20,
-                  //     color: Colors.green[600],
-                  //     fontWeight: FontWeight.w500,
-                  //   ),
-                  // ),
+                  SizedBox(
+                    height: 40,
+                  ),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -58,6 +79,16 @@ class _ZenCoinsState extends State<ZenCoins> {
               SizedBox(
                 height: 20,
               ),
+              ClipOval(
+                child: Image.asset(
+                  'assets/11.jpg', // Replace with the path to your image asset
+                  width: 220, // Adjust the width as needed
+                  height: 220, // Adjust the height as needed
+                  fit: BoxFit
+                      .cover, // This property ensures the image covers the oval shape
+                ),
+              ),
+              SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Text(

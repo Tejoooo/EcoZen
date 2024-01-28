@@ -5,7 +5,7 @@ class StepCarousel extends StatelessWidget {
   final List<Widget> carouselItems = [
     // Item 1
     Container(
-      width: 300.0,
+      width: 400.0,
       height: 300.0,
       decoration: BoxDecoration(
         color: Colors.blue[200],
@@ -24,21 +24,21 @@ class StepCarousel extends StatelessWidget {
           ),
           SizedBox(height: 8.0),
           Padding(
-            padding:EdgeInsets.all(10),
-          child: Text(
-            'Open your camera and capture the waste and send it to the nearest muncipal corporation and be a good citizen and help country to develop',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
+            padding: EdgeInsets.all(10),
+            child: Text(
+              'Open your camera and capture the waste and send it to the nearest muncipal corporation and be a good citizen and help country to develop',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
-          ),
           ),
         ],
       ),
     ),
     // Item 2
     Container(
-      width: 300.0,
+      width: 400.0,
       height: 300.0,
       decoration: BoxDecoration(
         color: Colors.green[200],
@@ -50,28 +50,28 @@ class StepCarousel extends StatelessWidget {
           Text(
             'POST',
             style: TextStyle(
-                            fontSize: 30,
+              fontSize: 30,
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 8.0),
           Padding(
-            padding:EdgeInsets.all(10),
-          child : Text(
-            'Post your surroundings waste and help your community to be clean and green. Be kind and post only waste problems.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
+            padding: EdgeInsets.all(10),
+            child: Text(
+              'Post your surroundings waste and help your community to be clean and green. Be kind and post only waste problems.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
-          ),
           ),
         ],
       ),
     ),
     // Item 3
     Container(
-      width: 300.0,
+      width: 400.0,
       height: 300.0,
       decoration: BoxDecoration(
         color: Colors.deepPurple[100],
@@ -83,23 +83,22 @@ class StepCarousel extends StatelessWidget {
           Text(
             'EARN',
             style: TextStyle(
-                            fontSize: 30,
+              fontSize: 30,
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 8.0),
           Padding(
-            padding:EdgeInsets.all(10), 
+            padding: EdgeInsets.all(10),
             child: Text(
-
-            'Earn the ZENCOINS by posting the posts and use them to get multiple discounts on your favourite brands and enjoy cleaning the country',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
+              'Earn the ZENCOINS by posting the posts and use them to get multiple discounts on your favourite brands and enjoy cleaning the country',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
-        ),
         ],
       ),
     ),
