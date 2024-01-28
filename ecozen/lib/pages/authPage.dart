@@ -37,9 +37,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: isLogin
-            ? Column(
+      body: isLogin
+          ? Padding(
+              padding: const EdgeInsets.all(26.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: 40,
@@ -73,11 +75,15 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextButton(
                     onPressed: changeState,
-                    child: Text("SignUP"),
+                    child: Text("SignUp"),
                   ),
                 ],
-              )
-            : Column(
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(26.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: 40,
@@ -123,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-      ),
+            ),
     );
   }
 

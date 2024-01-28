@@ -57,13 +57,13 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       String responseBody = await response.stream.bytesToString();
       Map<String, dynamic> jsonResponse = json.decode(responseBody);
       if (response.statusCode == 201) {
-        SuccessSnackBar(context, 'Image Stored Succesfully');
+        SuccessSnackBar(context, 'Image is successfully classified as Garbage');
         setState(() {
           _pickedImage = null;
         });
       } else {
         ErrorSnackBar(context,
-            'Failed to upload image, Error: ${jsonResponse['message']}');
+            'Looks like Image is Not classified into Garbage change the image');
       }
     } catch (e) {
       ErrorSnackBar(context, e.toString());
@@ -193,7 +193,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                               padding: EdgeInsets.all(4.0),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.white,
+                                color: Colors.green[200],
                               ),
                               child: Icon(Icons.close, color: Colors.black),
                             ),
@@ -207,7 +207,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.grey,
-                              width: 3.0,
+                              width: 1.0,
                             ),
                             borderRadius: BorderRadius.circular(8.0),
                             color: Colors.grey[50],
@@ -222,6 +222,26 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                         ),
                       ),
                 SizedBox(height: 20),
+                Container(
+                  width: 300, // Set the desired width
+                  height: 50, // Set the desired height
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Enter your description here',
+
+                      // Customize other properties if needed
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.blue, // Set the border color
+                          width: 2.0, // Set the border width
+                        ),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(8.0)), // Set the border radius
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
                 Container(
                   width: 200.0, // Adjust the width as needed
                   height: 50.0, // Adjust the height as needed

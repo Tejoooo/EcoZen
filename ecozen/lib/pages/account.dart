@@ -15,12 +15,17 @@ class _AccountState extends State<Account> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            child: Text("LogOut"),
+          Image.asset(
+            'assets/10-removebg-preview.png', // Replace with the path to your image asset
+            width: 350, // Adjust the width as needed
+            height: 400, // Adjust the height as needed
           ),
+          SizedBox(height: 30),
+          ElevatedButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+              },
+              child: Text("Logout")),
         ],
       ),
     );

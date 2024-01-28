@@ -66,18 +66,28 @@ class _HeatMapsState extends State<HeatMaps> {
   void _addMarker(ProblemModel problem, LatLng position) {
     markers.add(
       Marker(
-        markerId: MarkerId(problem.uid),
+        markerId: MarkerId(problem.uid +
+            position.longitude.toString() +
+            position.latitude.toString() +
+            problem.description),
         position: position,
         onTap: () async {
+          setState(() {
+            _isLoading = true;
+          });
           String pid = problem.pid.toString();
+          debugPrint(pid);
           String Url = backendURL + "/api/num_likes/";
           final result = await http.post(Uri.parse(Url), body: {
             "pid": pid,
             "uid": FirebaseAuth.instance.currentUser!.uid
           });
+          setState(() {
+            _isLoading = false;
+          });
 
           Map<String, dynamic> response = json.decode(result.body);
-          // Map<String, dynamic> response = {"voted": true};
+          // Map<String, dynamic> response = {"userLiked": true};
           _onMarkerTapped(
               '${FirebaseAuth.instance.currentUser!.uid} reported with description ${problem.description} with ${pid}',
               problem.image,
