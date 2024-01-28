@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:ecozen/constants.dart';
 import 'package:ecozen/controllers/geoLocationGet.dart';
 import 'package:ecozen/controllers/snackBar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -19,6 +20,7 @@ class ImagePickerWidget extends StatefulWidget {
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   XFile? _pickedImage;
   bool _isLoading = false;
+  TextEditingController _descriptController = TextEditingController();
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -46,8 +48,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     try {
       final request = http.MultipartRequest('POST', url);
       request.files.add(await http.MultipartFile.fromPath('image', filePath));
-      request.fields['description'] = 'firstimage';
-      request.fields['user'] = '555555555';
+      request.fields['description'] = _descriptController.text.toString();
+      request.fields['user'] = FirebaseAuth.instance.currentUser!.uid;
       await getCurrentLocation().then((value) {
         request.fields['latitude'] = value.latitude.toString();
         request.fields['longitude'] = value.longitude.toString();
@@ -60,10 +62,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         SuccessSnackBar(context, 'Image is successfully classified as Garbage');
         setState(() {
           _pickedImage = null;
+          _descriptController.dispose();
         });
       } else {
         ErrorSnackBar(context,
-            'Looks like Image is Not classified into Garbage change the image');
+            'Looks like Image is Not classified into Garbage change the image with statusCode${response.statusCode}');
       }
     } catch (e) {
       ErrorSnackBar(context, e.toString());
@@ -226,6 +229,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   width: 300, // Set the desired width
                   height: 50, // Set the desired height
                   child: TextField(
+                    controller: _descriptController,
                     decoration: InputDecoration(
                       hintText: 'Enter your description here',
 
