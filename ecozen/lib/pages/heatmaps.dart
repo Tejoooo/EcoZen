@@ -71,7 +71,6 @@ class _HeatMapsState extends State<HeatMaps> {
         onTap: () async {
           String pid = problem.pid.toString();
           String Url = backendURL + "/api/num_likes/";
-          print(Url);
           final result = await http.post(Uri.parse(Url), body: {
             "pid": pid,
             "uid": FirebaseAuth.instance.currentUser!.uid
@@ -118,11 +117,13 @@ class _HeatMapsState extends State<HeatMaps> {
                       if (voted) {
                         count = -1;
                       }
-                      final result =
-                          await http.post(Uri.parse(backendURL), body: {
-                        "uid": FirebaseAuth.instance.currentUser!.uid,
-                        "pid": pid,
-                      });
+                      final result = await http.post(
+                          Uri.parse(backendURL + "/api/count_votes/"),
+                          body: {
+                            "uid": FirebaseAuth.instance.currentUser!.uid,
+                            "pid": pid.toString(),
+                            "count": count.toString()
+                          });
                       if (result.statusCode == 200) {
                         setState(() {
                           voted = !voted;
