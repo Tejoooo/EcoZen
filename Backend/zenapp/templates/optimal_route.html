@@ -1,0 +1,64 @@
+<!-- templates/optimal_routes.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimal Routes Visualization</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Optimal Routes Visualization</h1>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        function initMap(routes) {
+            // Initialize the map
+            const map = L.map('map').setView([routes.visits.order_1.location.lat, routes.visits.order_1.location.lng], 13);
+
+            // Add a tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add markers for each visit
+            for (const visitKey in routes.visits) {
+                const visit = routes.visits[visitKey];
+                L.marker([visit.location.lat, visit.location.lng]).addTo(map)
+                    .bindPopup(visit.location.name);
+            }
+
+            // Add a marker for the depot
+            const depot = routes.fleet.vehicle_1.start_location;
+            L.marker([depot.lat, depot.lng]).addTo(map)
+                .bindPopup(depot.name);
+        }
+
+        // Fetch optimal routes from the backend
+        fetch('/api/optimal-routes/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                latitude: YOUR_INPUT_LATITUDE,
+                longitude: YOUR_INPUT_LONGITUDE,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display the optimal route on the map
+            initMap(data.routes);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    </script>
+</body>
+</html>

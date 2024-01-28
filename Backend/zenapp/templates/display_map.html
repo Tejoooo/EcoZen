@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Straight Line Route with Leaflet</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #map {
+      height: 800px;
+    }
+
+    nav {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+    }
+  </style>
+</head>
+<body>
+    <nav>
+        <h2>Straight Line Route</h2>
+      </nav>
+      <nav>
+        <a href="/api/admin-dashboard/">Home</a>
+        <a href="/api/optimal_route">Optimal Route</a>
+      </nav>
+  <div id="map"></div>
+  <script>
+    var locationPoints = [
+      { 'latitude': 17.385044, 'longitude': 78.486671 }, // Hyderabad
+      { 'latitude': 17.434810, 'longitude': 78.473685 }, // Secunderabad
+      { 'latitude': 17.447237, 'longitude': 78.376464 }, // Gachibowli
+      { 'latitude': 17.412627, 'longitude': 78.267509 }  // HITEC City
+    ];
+
+    var map = L.map('map').setView([17.385044, 78.486671], 12);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // Connect points with a straight line
+    var route = L.polyline(locationPoints.map(point => [point.latitude, point.longitude]), { color: 'blue', smoothFactor: 0 }).addTo(map);
+
+    locationPoints.forEach(point => {
+        L.marker([point.latitude, point.longitude]).addTo(map);
+    });
+
+    map.fitBounds(route.getBounds());
+  </script>
+</body>
+</html>

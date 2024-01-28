@@ -1,9 +1,16 @@
 from django.db import models
 
 class UserModel(models.Model):
-    user = models.IntegerField(primary_key=True, unique=True)
-    def __str__(self):
-        return f"{self.user}"
+    user = models.TextField(primary_key=True, unique=True)
+    phone_number = models.CharField(max_length=15,null=True)
+    email = models.EmailField(unique=True,null=True, blank=True)
+    name = models.CharField(max_length=255,null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=255, blank=True, null=True)
+    pincode = models.CharField(max_length=10, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
 class UserProblem(models.Model):
     class ProblemStatus(models.TextChoices):
@@ -19,6 +26,8 @@ class UserProblemImage(models.Model):
     user_problem = models.ForeignKey(UserProblem, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='user_problem_images/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
 
 
 class ZenCoins(models.Model):
@@ -30,3 +39,26 @@ class ZenCoins(models.Model):
     
 class UploadedImage(models.Model):
     image = models.ImageField(upload_to='user_problem_images/')
+
+class Votes(models.Model):
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    problem = models.ForeignKey(UserProblem, on_delete=models.CASCADE)
+    votes = models.IntegerField(default=0)
+
+    class Meta:
+        # Define a composite primary key
+        unique_together = ('user', 'problem')
+
+class AdminUser(models.Model):
+    admin_user = models.TextField(primary_key=True, unique=True)
+    phone_number = models.CharField(max_length=10)
+    email = models.EmailField(unique=True,null=True, blank=True)
+    name = models.CharField(max_length=255,null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=255, blank=True, null=True)
+    pincode = models.CharField(max_length=10, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
