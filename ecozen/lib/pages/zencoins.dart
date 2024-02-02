@@ -2,10 +2,11 @@
 
 import 'dart:convert';
 
-import 'package:ecozen/constants.dart';
 import 'package:ecozen/controllers/snackBar.dart';
+import 'package:ecozen/sercureStorage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class ZenCoins extends StatefulWidget {
@@ -17,6 +18,7 @@ class ZenCoins extends StatefulWidget {
 
 class _ZenCoinsState extends State<ZenCoins> {
   int zenCoins = 450;
+  String backendURL = "";
 
   @override
   void initState() {
@@ -25,6 +27,11 @@ class _ZenCoinsState extends State<ZenCoins> {
   }
 
   void _init() async {
+    String url = await secureStorage.read(key: "backendURL") ?? "";
+    setState(() {
+      backendURL = url;
+    });
+    debugPrint(backendURL);
     try {
       final response = await http.get(Uri.parse(backendURL +
           "/api/zencoin/${FirebaseAuth.instance.currentUser!.uid}"));

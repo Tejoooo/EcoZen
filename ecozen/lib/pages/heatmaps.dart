@@ -2,10 +2,10 @@
 
 import 'dart:convert';
 
-import 'package:ecozen/constants.dart';
 import 'package:ecozen/controllers/geoLocationGet.dart';
 import 'package:ecozen/controllers/snackBar.dart';
 import 'package:ecozen/models/problemModel.dart';
+import 'package:ecozen/sercureStorage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -22,6 +22,7 @@ class HeatMaps extends StatefulWidget {
 
 class _HeatMapsState extends State<HeatMaps> {
   late GoogleMapController mapController;
+  String backendURL = ""; 
 
   LatLng _center = LatLng(-23.5557714, -46.6395571);
   double zoom = 11.0;
@@ -48,6 +49,10 @@ class _HeatMapsState extends State<HeatMaps> {
   }
 
   void FetchAllProblems() async {
+    final url = await secureStorage.read(key: "backendURL") ?? "";
+    setState(() {
+      backendURL = url;
+    });
     final response =
         await http.get(Uri.parse("${backendURL}/api/user-problems/"));
     if (response.statusCode == 200) {

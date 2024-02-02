@@ -1,12 +1,12 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
-import 'package:ecozen/constants.dart';
 import 'package:ecozen/pages/account.dart';
 import 'package:ecozen/pages/heatmaps.dart';
 import 'package:ecozen/pages/homePage.dart';
 import 'package:ecozen/pages/post.dart';
 import 'package:ecozen/controllers/snackBar.dart';
 import 'package:ecozen/pages/zencoins.dart';
+import 'package:ecozen/sercureStorage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +23,7 @@ class _PagesServiceState extends State<PagesService> {
   int _currentIndex = 0;
   late final List<Widget> _pages;
   bool isEmailVerified = false;
+  String backendURL = "";
 
   @override
   void initState() {
@@ -42,6 +43,10 @@ class _PagesServiceState extends State<PagesService> {
   }
 
   void checkForUserInDB() async {
+    final url = await secureStorage.read(key: "backendURL") ?? "";
+    setState(() {
+      backendURL = url;
+    });
     final jsonResponse = await http.get(Uri.parse(backendURL +
         "/api/user_exists/" +
         FirebaseAuth.instance.currentUser!.uid.toString()));

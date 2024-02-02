@@ -2,9 +2,9 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:ecozen/constants.dart';
 import 'package:ecozen/controllers/geoLocationGet.dart';
 import 'package:ecozen/controllers/snackBar.dart';
+import 'package:ecozen/sercureStorage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -20,7 +20,21 @@ class ImagePickerWidget extends StatefulWidget {
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   XFile? _pickedImage;
   bool _isLoading = false;
+  String backendURL = "";
   TextEditingController _descriptController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+  void _init() async{
+    String url = await secureStorage.read(key: "backendURL") ?? "";
+    setState(() {
+      backendURL = url;
+    });
+    debugPrint(backendURL);
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
